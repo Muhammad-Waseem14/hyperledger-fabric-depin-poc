@@ -1,0 +1,35 @@
+{
+    "name": "depin-poc",
+    "version": "1.0.0",
+    "description": "A DePIN project focused on climate data collection and validation.",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "engines": {
+        "node": ">=18"
+    },
+    "scripts": {
+        "lint": "eslint src",
+        "pretest": "npm run lint",
+        "build": "tsc",
+        "start": "fabric-chaincode-node start",
+        "build:watch": "tsc -w",
+        "package": "npm run build && npm shrinkwrap"
+    },
+    "engineStrict": true,
+    "dependencies": {
+        "crypto-js": "^4.2.0",
+        "fabric-contract-api": "~2.5",
+        "fabric-shim": "~2.5",
+        "uuid": "^10.0.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.3.0",
+        "@tsconfig/node18": "^18.2.4",
+        "@types/crypto-js": "^4.2.2",
+        "@types/node": "^18.19.33",
+        "@types/uuid": "^10.0.0",
+        "eslint": "^8.57.0",
+        "typescript": "^5.5.4",
+        "typescript-eslint": "^7.11.0"
+    }
+}
