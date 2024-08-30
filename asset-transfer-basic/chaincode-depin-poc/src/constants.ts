@@ -22,6 +22,7 @@ export type PollutionRecord = {
     };
 
 export interface ClimateRecordInterface {
+    recordId: string;
     deviceId: string;
     timestamp?: string;
     emissions?: EmissionRecord;
@@ -31,9 +32,9 @@ export interface ClimateRecordInterface {
 
 export const climateRecordDictionary = {
     emissionUnits: {
-      tCO2: { min: 0, max: 1_000_000_000 },
-      kgCO2: { min: 0.01, max: 10_000_000 },
-      gCO2: { min: 0.001, max: 10_000_000 }
+      tCO2: { min: 0, max: 1000000000 },
+      kgCO2: { min: 0.01, max: 10000000 },
+      gCO2: { min: 0.001, max: 10000000 }
     },
 
     temperatureUnits: {
@@ -43,7 +44,7 @@ export const climateRecordDictionary = {
     },
 
     pollutionLevelUnits: {
-      mgpq: { min: 0, max: 10_000 }, //MicrogramsPerCubicMeter 'µg/m³'
+      mgpq: { min: 0, max: 10000 }, //MicrogramsPerCubicMeter 'µg/m³'
       ppm: { min: 0, max: 1000 } //PartsPerMillion ppm
     }
 };

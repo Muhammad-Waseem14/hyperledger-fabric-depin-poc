@@ -9,19 +9,36 @@ import {
     climateRecordDictionary, 
     VALID_EMISSION_UNITS, 
     VALID_TEMPERATURE_UNITS, 
-    VALID_POLLUTION_LEVEL_UNITS 
+    VALID_POLLUTION_LEVEL_UNITS
 } from './constants';
 
 export class ClimateDataContract extends Contract {
-    async addClimateRecord(ctx: Context,  record: ClimateRecordInterface) {
-
+    async addClimateRecord(
+        ctx: Context, 
+        recordId: string, 
+        deviceId: string, 
+        sensorId: string, 
+        amount: string, 
+        unit: 'tCO2' | 'kgCO2' | 'gCO2',
+        timestamp: string
+    ) {
+        
+        const record: ClimateRecordInterface = {
+            recordId,
+            deviceId,
+            emissions:  {
+                sensorId,
+                amount: parseFloat(amount),
+                unit,
+            },
+            timestamp
+        };
+    
        this.validateClimateRecord(record);
-
-       //record.timestamp = new Date().toISOString();
-       const recordId = MD5(uuidv4()).toString();
-
-       await ctx.stub.putState(recordId, serialize(record));
+    
+        await ctx.stub.putState(recordId, serialize(record));
     }
+    
 
     async getClimateRecord(ctx: Context, recordId: string): Promise<ClimateRecordInterface | null> {
         const recordBuffer = await ctx.stub.getState(recordId);
@@ -35,23 +52,24 @@ export class ClimateDataContract extends Contract {
         return record;
     }
 
-    async getAllClimateRecords(ctx: Context): Promise<ClimateRecordInterface[]> {
-        const allResults: ClimateRecordInterface[] = [];
-
+    async getAllClimateRecords(ctx: Context): Promise<string> {
+        const allResults = [];
+        
         const iterator = await ctx.stub.getStateByRange('', '');
-
         let result = await iterator.next();
-
         while (!result.done) {
-            const recordBytes = result.value.value.toString();
-            const record = JSON.parse(recordBytes) as ClimateRecordInterface;
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue) as any;
+            } catch (err) {
+                console.log(err);
+                record = strValue;
+            }
             allResults.push(record);
-
             result = await iterator.next();
         }
-
-        await iterator.close();
-        return allResults;
+        return JSON.stringify(allResults);
     }
 
 

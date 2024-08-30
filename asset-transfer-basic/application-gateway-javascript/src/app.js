@@ -121,7 +121,7 @@ async function getGateway() {
     return gateway;
 }
 
-app.get('/getAllAssets', async (req, res) => {
+app.get('/getAllClimateRecords', async (req, res) => {
     try {
         const gateway = await getGateway();
         const network = gateway.getNetwork(channelName);
@@ -142,15 +142,25 @@ app.get('/getAllAssets', async (req, res) => {
 });
 
 app.post('/recordClimateData', async (req, res) => {
+    const recordId = `asset${String(Date.now())}`;
     const { deviceId, emissions } = req.body;
-    const record = JSON.stringify({ deviceId, emissions });
+    const { sensorId, amount, unit } = emissions;
+    const timestamp = new Date().toISOString();
 
     console.log('params', req.body, deviceId, emissions);
     try {
         const gateway = await getGateway();
         const network = gateway.getNetwork(channelName);
         const contract = network.getContract(chaincodeName);
-        await contract.submitTransaction('addClimateRecord', record);
+        await contract.submitTransaction(
+            'addClimateRecord',
+            recordId,
+            deviceId,
+            sensorId,
+            amount.toString(),
+            unit,
+            timestamp
+        );
 
         gateway.close();
         res.status(200).send('CreateCar transaction committed successfully');
