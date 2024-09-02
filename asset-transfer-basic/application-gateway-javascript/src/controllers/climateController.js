@@ -1,8 +1,6 @@
 const { TextDecoder } = require('util');
 const { connect } = require('@hyperledger/fabric-gateway');
-const { newGrpcConnection } = require('../services/grpcService');
-const { newIdentity } = require('../services/identityService');
-const { newSigner } = require('../services/signerService');
+const { newGrpcConnection, newIdentity, newSigner } = require('../services/climateService');
 const config = require('../configs');
 
 const utf8Decoder = new TextDecoder();
