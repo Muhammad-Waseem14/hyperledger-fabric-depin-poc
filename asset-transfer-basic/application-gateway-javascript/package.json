@@ -8,7 +8,7 @@
     "scripts": {
         "lint": "eslint src",
         "pretest": "npm run lint",
-        "start": "node src/app.js"
+        "start": "node src/server.js"
     },
     "engineStrict": true,
     "author": "Hyperledger",
