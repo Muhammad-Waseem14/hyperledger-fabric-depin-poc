@@ -19,8 +19,7 @@
     "dependencies": {
         "crypto-js": "^4.2.0",
         "fabric-contract-api": "~2.5",
-        "fabric-shim": "~2.5",
-        "uuid": "^10.0.0"
+        "fabric-shim": "~2.5"
     },
     "devDependencies": {
         "@eslint/js": "^9.3.0",

@@ -142,19 +142,16 @@ app.get('/getAllClimateRecords', async (req, res) => {
 });
 
 app.post('/recordClimateData', async (req, res) => {
-    const recordId = `asset${String(Date.now())}`;
     const { deviceId, emissions } = req.body;
     const { sensorId, amount, unit } = emissions;
     const timestamp = new Date().toISOString();
 
-    console.log('params', req.body, deviceId, emissions);
     try {
         const gateway = await getGateway();
         const network = gateway.getNetwork(channelName);
         const contract = network.getContract(chaincodeName);
         await contract.submitTransaction(
             'addClimateRecord',
-            recordId,
             deviceId,
             sensorId,
             amount.toString(),
@@ -163,9 +160,9 @@ app.post('/recordClimateData', async (req, res) => {
         );
 
         gateway.close();
-        res.status(200).send('CreateCar transaction committed successfully');
+        res.status(200).send('Transaction committed successfully');
     } catch (error) {
-        console.error('Error in CreateAsset:', error);
+        console.error('Error in creating record:', error);
         res.status(500).send(error.message);
     }
 });

@@ -22,7 +22,7 @@ export type PollutionRecord = {
     };
 
 export interface ClimateRecordInterface {
-    recordId: string;
+    recordId?: string;
     deviceId: string;
     timestamp?: string;
     emissions?: EmissionRecord;
