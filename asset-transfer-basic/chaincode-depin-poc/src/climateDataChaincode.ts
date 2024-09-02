@@ -10,31 +10,110 @@ export class ClimateDataContract extends Contract {
     async addClimateRecord(
         ctx: Context, 
         deviceId: string, 
-        sensorId: string, 
-        amount: string, 
-        unit: 'tCO2' | 'kgCO2' | 'gCO2',
+        emissionSensorId: string, 
+        emissionAmount: string, 
+        emissionUnit: 'tCO2' | 'kgCO2' | 'gCO2',
+        temperatureSensorId: string,
+        temperatureValue: string,
+        temperatureUnit: '°C' | '°F'| 'K',
+        pollutionSensorId: string,
+        pollutionLevel: string,
+        pollutionUnit: 'µg/m³'| 'mg/m³',
         timestamp: string
     ) {
         try {
-           const recordId = MD5(deviceId + timestamp).toString();
+            // Generate a unique record ID
+            const recordId = MD5(deviceId + timestamp).toString();
+    
             const record: ClimateRecordInterface = {
                 recordId,
                 deviceId,
-                emissions:  {
-                    sensorId,
-                    amount: parseFloat(amount),
-                    unit,
+                emissions: {
+                    sensorId:emissionSensorId,
+                    amount: parseFloat(emissionAmount),
+                    unit: emissionUnit,
+                },
+                temperature : {
+                    sensorId: temperatureSensorId,
+                    value: parseFloat(temperatureValue),
+                    unit: temperatureUnit
+                },
+                pollution: {
+                    sensorId: pollutionSensorId,
+                    level: parseFloat(pollutionLevel),
+                    unit: pollutionUnit
                 },
                 timestamp
             };
-        
-           validateClimateRecord(record);
-        
+    
+            // Validate the record before saving
+            validateClimateRecord(record);
+    
             await ctx.stub.putState(recordId, serialize(record));
-          } catch (error: any) {
-            console.error('Error generating recordId:', error);
-            throw new Error(error);
-          }
+    
+        } catch (error) {
+            console.error(`Error in addClimateRecord: ${error}`);
+            throw new Error(`Failed to add climate record: ${error}`);
+        }
+    }
+    
+    async updateClimateRecord(
+        ctx: Context,
+        recordId: string,
+        deviceId: string, 
+        emissionSensorId: string, 
+        emissionAmount: string, 
+        emissionUnit: 'tCO2' | 'kgCO2' | 'gCO2',
+        temperatureSensorId: string,
+        temperatureValue: number,
+        temperatureUnit: '°C' | '°F'| 'K',
+        pollutionSensorId: string,
+        pollutionLevel: number,
+        pollutionUnit: 'µg/m³'| 'mg/m³',
+        timestamp: string
+    ) {
+        try {
+            // Check if the record exists
+            const exists = await this.recordExists(ctx, recordId);
+            if (!exists) {
+                throw new Error(`The record ${recordId} does not exist`);
+            }
+
+            const record: ClimateRecordInterface = {
+                recordId,
+                deviceId,
+                emissions: {
+                    sensorId:emissionSensorId,
+                    amount: parseFloat(emissionAmount),
+                    unit: emissionUnit,
+                },
+                temperature : {
+                    sensorId: temperatureSensorId,
+                    value: temperatureValue,
+                    unit: temperatureUnit
+                },
+                pollution: {
+                    sensorId: pollutionSensorId,
+                    level: pollutionLevel,
+                    unit: pollutionUnit
+                },
+                timestamp
+            };
+    
+            // Validate the record before saving
+            validateClimateRecord(record);
+    
+            await ctx.stub.putState(recordId, serialize(record));
+    
+        } catch (error) {
+            console.error(`Failed to update climate record: ${error}`);
+            throw new Error(`Update operation failed: ${error}`);
+        }
+    }
+
+    async recordExists(ctx: Context, recordId: string) {
+        const recordJSON = await ctx.stub.getState(recordId);
+        return recordJSON && recordJSON.length > 0;
     }
 
     async getClimateRecord(ctx: Context, recordId: string): Promise<ClimateRecordInterface | null> {

@@ -1,6 +1,6 @@
 export const VALID_EMISSION_UNITS = ['tCO2', 'kgCO2', 'gCO2'];
-export const VALID_TEMPERATURE_UNITS = ['celsius', 'fahrenheit', 'kelvin'];
-export const VALID_POLLUTION_LEVEL_UNITS = ['mgpq', 'ppm'];
+export const VALID_TEMPERATURE_UNITS = ['°C', '°F', 'K'];
+export const VALID_POLLUTION_LEVEL_UNITS = ['µg/m³', 'mg/m³'];
 
 
 export type EmissionRecord = {
@@ -12,13 +12,13 @@ export type EmissionRecord = {
 export type TemperatureRecord = {
     sensorId: string;
     value: number;
-    unit: 'celsius' | 'fahrenheit' | 'kelvin'
+    unit: '°C' | '°F'| 'K'
     };
   
 export type PollutionRecord = {
     sensorId: string;
     level: number;
-    unit: 'mgpq' | 'ppm'
+    unit: 'µg/m³'| 'mg/m³'
     };
 
 export interface ClimateRecordInterface {
@@ -38,13 +38,13 @@ export const climateRecordDictionary = {
     },
 
     temperatureUnits: {
-      celsius: { min: -273.15, max: 1000 }, // '°C'
-      fahrenheit: { min: -459.67, max: 1800 }, // '°F'
-      kelvin: { min: 0, max: 1500 } // k
+      '°C': { min: -273.15, max: 1000 }, // '°C'
+      '°F': { min: -459.67, max: 1800 }, // '°F'
+      'K': { min: 0, max: 1500 } // k
     },
 
     pollutionLevelUnits: {
-      mgpq: { min: 0, max: 10000 }, //MicrogramsPerCubicMeter 'µg/m³'
-      ppm: { min: 0, max: 1000 } //PartsPerMillion ppm
+      'µg/m³': { min: 0, max: 10000 }, //MicrogramsPerCubicMeter 'µg/m³'
+      'mg/m³': { min: 0, max: 1000 } //PartsPerMillion ppm
     }
 };

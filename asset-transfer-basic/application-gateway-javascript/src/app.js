@@ -142,8 +142,23 @@ app.get('/getAllClimateRecords', async (req, res) => {
 });
 
 app.post('/recordClimateData', async (req, res) => {
-    const { deviceId, emissions } = req.body;
-    const { sensorId, amount, unit } = emissions;
+    const { deviceId, emissions, temperature, pollution } = req.body;
+    console.log('req.body', req.body);
+    const {
+        sensorId: emissionSensorId,
+        amount: emissionAmount,
+        unit: emissionUnit,
+    } = emissions || {};
+    const {
+        sensorId: temperatureSensorId,
+        value: temperatureValue,
+        unit: temperatureUnit,
+    } = temperature || {};
+    const {
+        sensorId: pollutionSensorId,
+        level: pollutionLevel,
+        unit: pollutionUnit,
+    } = pollution || {};
     const timestamp = new Date().toISOString();
 
     try {
@@ -153,9 +168,15 @@ app.post('/recordClimateData', async (req, res) => {
         await contract.submitTransaction(
             'addClimateRecord',
             deviceId,
-            sensorId,
-            amount.toString(),
-            unit,
+            emissionSensorId,
+            emissionAmount.toString(),
+            emissionUnit,
+            temperatureSensorId,
+            temperatureValue.toString(),
+            temperatureUnit,
+            pollutionSensorId,
+            pollutionLevel.toString(),
+            pollutionUnit,
             timestamp
         );
 
