@@ -2,24 +2,28 @@ export const VALID_EMISSION_UNITS = ['tCO2', 'kgCO2', 'gCO2'];
 export const VALID_TEMPERATURE_UNITS = ['°C', '°F', 'K'];
 export const VALID_POLLUTION_LEVEL_UNITS = ['µg/m³', 'mg/m³'];
 
+export type EmissionsUnits = 'tCO2' | 'kgCO2' | 'gCO2';
+export type TemperatureUnits = '°C' | '°F'| 'K';
+export type PollutionUnits = 'µg/m³'| 'mg/m³';
+
 
 export type EmissionRecord = {
     sensorId: string;
     amount: number;
-    unit: 'tCO2' | 'kgCO2' | 'gCO2';
-    };
+    unit: EmissionsUnits;
+};
   
 export type TemperatureRecord = {
     sensorId: string;
     value: number;
-    unit: '°C' | '°F'| 'K'
-    };
+    unit: TemperatureUnits;
+};
   
 export type PollutionRecord = {
     sensorId: string;
     level: number;
-    unit: 'µg/m³'| 'mg/m³'
-    };
+    unit: PollutionUnits;
+};
 
 export interface ClimateRecordInterface {
     recordId?: string;
@@ -28,7 +32,7 @@ export interface ClimateRecordInterface {
     emissions?: EmissionRecord;
     temperature?: TemperatureRecord;
     pollution?: PollutionRecord;
-  }
+}
 
 export const climateRecordDictionary = {
     emissionUnits: {

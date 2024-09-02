@@ -136,8 +136,14 @@ app.get('/getAllClimateRecords', async (req, res) => {
         gateway.close();
         res.status(200).json(result);
     } catch (error) {
-        console.error('Error in GetAllAssets:', error);
-        res.status(500).send(error.message);
+        // Check if the error has a 'details' property from the Fabric SDK
+        if (error.details && error.details.length > 0) {
+            const fabricError = error.details[0].message;
+            res.status(500).send(fabricError);
+        } else {
+            // Fallback to the generic error message
+            res.status(500).send(error.message || 'An unknown error occurred');
+        }
     }
 });
 
@@ -184,7 +190,15 @@ app.post('/recordClimateData', async (req, res) => {
         res.status(200).send('Transaction committed successfully');
     } catch (error) {
         console.error('Error in creating record:', error);
-        res.status(500).send(error.message);
+
+        // Check if the error has a 'details' property from the Fabric SDK
+        if (error.details && error.details.length > 0) {
+            const fabricError = error.details[0].message;
+            res.status(500).send(fabricError);
+        } else {
+            // Fallback to the generic error message
+            res.status(500).send(error.message || 'An unknown error occurred');
+        }
     }
 });
 
