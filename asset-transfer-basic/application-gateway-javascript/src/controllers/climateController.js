@@ -52,8 +52,14 @@ async function addClimateRecord(req, res) {
         gateway.close();
         res.status(200).send('Climate record added successfully');
     } catch (error) {
-        console.error('Error in addClimateRecord:', error);
-        res.status(500).send(error.message);
+        // Check if the error has a 'details' property from the Fabric SDK
+        if (error.details && error.details.length > 0) {
+            const fabricError = error.details[0].message;
+            res.status(500).send(fabricError);
+        } else {
+            // Fallback to the generic error message
+            res.status(500).send(error.message || 'An unknown error occurred');
+        }
     }
 }
 
@@ -96,8 +102,14 @@ async function updateClimateRecord(req, res) {
         gateway.close();
         res.status(200).send('Climate record updated successfully');
     } catch (error) {
-        console.error('Error in updateClimateRecord:', error);
-        res.status(500).send(error.message);
+        // Check if the error has a 'details' property from the Fabric SDK
+        if (error.details && error.details.length > 0) {
+            const fabricError = error.details[0].message;
+            res.status(500).send(fabricError);
+        } else {
+            // Fallback to the generic error message
+            res.status(500).send(error.message || 'An unknown error occurred');
+        }
     }
 }
 
@@ -119,8 +131,14 @@ async function getClimateRecord(req, res) {
         gateway.close();
         res.status(200).json(result);
     } catch (error) {
-        console.error('Error in getClimateRecord:', error);
-        res.status(500).send(error.message);
+        // Check if the error has a 'details' property from the Fabric SDK
+        if (error.details && error.details.length > 0) {
+            const fabricError = error.details[0].message;
+            res.status(500).send(fabricError);
+        } else {
+            // Fallback to the generic error message
+            res.status(500).send(error.message || 'An unknown error occurred');
+        }
     }
 }
 
@@ -139,8 +157,14 @@ async function getAllClimateRecords(req, res) {
         gateway.close();
         res.status(200).json(result);
     } catch (error) {
-        console.error('Error in getAllClimateRecords:', error);
-        res.status(500).send(error.message);
+        // Check if the error has a 'details' property from the Fabric SDK
+        if (error.details && error.details.length > 0) {
+            const fabricError = error.details[0].message;
+            res.status(500).send(fabricError);
+        } else {
+            // Fallback to the generic error message
+            res.status(500).send(error.message || 'An unknown error occurred');
+        }
     }
 }
 
